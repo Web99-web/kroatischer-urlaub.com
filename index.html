@@ -106,18 +106,25 @@
   <div class="badge-visits" id="visits">Visits: –</div>
 <script>
 (function(){
-  const KEY = 'visits_' + location.hostname;      // per-domena
-  let n = Number(localStorage.getItem(KEY));
-  if (!Number.isFinite(n)) {
-    n = 10500;                                     // prvi prikaz = 10500
+  const KEY = 'visits_' + location.hostname; // jedinstveno po domeni
+  const raw = localStorage.getItem(KEY);
+  const prev = parseInt(raw, 10);
+
+  let n;
+  if (!raw || isNaN(prev) || prev < 10500) {
+    // prvi put ili stara kriva vrijednost -> startaj od 10500
+    n = 10500;
   } else {
-    n = n + 1;                                     // sljedeći prikazi +1
+    // normalno brojanje
+    n = prev + 1;
   }
-  localStorage.setItem(KEY, n);
+
+  localStorage.setItem(KEY, String(n));
   const el = document.getElementById('visits');
   if (el) el.textContent = 'Visits: ' + n.toLocaleString('en-US');
 })();
 </script>
+
 
 <body>
   <main class="shell">
